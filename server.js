@@ -1,3 +1,4 @@
+//dependencies
 var express = require('express');
 var fs = require('fs');
 var request = require('request');
@@ -5,6 +6,7 @@ var cheerio = require('cheerio');
 var app     = express();
 
 app.use(express.static(__dirname + '/public'));
+
 app.get('/', function(req, res){
 	res.redirect('/scrape');
 });
@@ -28,16 +30,17 @@ app.get('/scrape', function(req, res){
             var $ = cheerio.load(html);
             // Finally, we'll define the variables we're going to capture
 
-            var foobar, release, rating;
+            var foobar, release, rating
             var json = { foobar : "", release : "", rating : ""};
 
             $('.event-392').filter(function(){
             	var data = $(this);
             	foobar = data.children().first().text();
             	json.foobar = foobar;
+            	//res.send(data);
             });
         }
-    fs.writeFile('output.json', JSON.stringify(json, null, 4), function(err){
+    fs.writeFile('./public/js/output.json', JSON.stringify(json, null, 4), function(err){
     	console.log('File successfully written! - Check your project directory for the output.json file');
 	})
 
@@ -48,6 +51,6 @@ app.get('/scrape', function(req, res){
 
 app.listen('3000')
 
-console.log('Magic happens on port 3000');
+console.log('Server running on 3000');
 
 exports = module.exports = app;
