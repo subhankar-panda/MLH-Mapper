@@ -26,21 +26,27 @@ app.get('/scrape', function(req, res){
 
         if(!error){
             // Next, we'll utilize the cheerio library on the returned html which will essentially give us jQuery functionality
-
+            console.log("ree");
             var $ = cheerio.load(html);
+            var hackathon_array = [];
             // Finally, we'll define the variables we're going to capture
 
-            var foobar, release, rating
-            var json = { foobar : "", release : "", rating : ""};
+            var hackathon;
+            var json = { hackathon : ""};
 
-            $('.event-392').filter(function(){
+            $('.event').filter(function(){
             	var data = $(this);
-            	foobar = data.children().first().text();
-            	json.foobar = foobar;
-            	//res.send(data);
+
+         		//using regex to clean up the output
+            	hackathon = data.children().first().text();
+            	hackathon = hackathon.replace(/\n/g, "").replace(/\s+/g, " ");
+            	json.hackathon = hackathon;
+            	hackathon_array.push(json);
             });
         }
-    fs.writeFile('./public/js/output.json', JSON.stringify(json, null, 4), function(err){
+
+    console.log(hackathon_array);
+    fs.writeFile('./public/js/output.json', JSON.stringify(hackathon_array, null, 4), function(err){
     	console.log('File successfully written! - Check your project directory for the output.json file');
 	})
 
